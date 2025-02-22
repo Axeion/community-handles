@@ -25,7 +25,7 @@ export default function CommunityPage() {
         </h1>
         <p className="max-w-[700px] text-lg text-muted-foreground sm:text-xl">
           Want a custom community handle for your community, like
-          @alex.swifties.social, @jay.army.social, or @jane.kawaii.social? Follow
+          @dalton.frmsn.network? Follow
           these steps to get one.
         </p>
       </div>
@@ -34,12 +34,12 @@ export default function CommunityPage() {
           <p className="max-w-lg">
             Buy a domain from a domain registrar. We use{" "}
             <a
-              href="https://namecheap.com"
+              href="https://namesilo.com"
               className="underline"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Namecheap
+              namesilo.com
             </a>
             , but it doesn&apos;t matter which one you use. Just make sure you
             are able to change where you point the nameservers.
@@ -59,17 +59,7 @@ export default function CommunityPage() {
             Check out the README for the recommended solution, using Vercel and
             Railway.
           </p>
-          <p className="mt-8 max-w-lg text-sm text-muted-foreground">
-            Using the hosted version? (no longer available){" "}
-            <a
-              href="https://billing.stripe.com/p/login/6oEbJccQOh2Rdji4gg"
-              className="underline"
-            >
-              Go to the billing portal
-            </a>
-            .
-          </p>
-        </Stage>
+          </Stage>
       </div>
     </main>
   )
