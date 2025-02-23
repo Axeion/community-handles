@@ -8,11 +8,14 @@ interface Props {
   params: { handle: string; domain: string }
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const domain = params.domain
-  const user = await prisma.user.findFirst({
-    where: { handle: params.handle, domain: { name: domain } },
+async function getUser(handle: string, domain: string) {
+  return await prisma.user.findFirst({
+    where: { handle, domain: { name: domain } },
   })
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const user = await getUser(params.handle, params.domain)
   if (!user) {
     return {
       title: "Profile not found",
@@ -33,9 +36,10 @@ export default async function HandlePage({ params }: Props) {
   const { domain, handle } = params
 
   try {
-    const user = await prisma.user.findFirstOrThrow({
-      where: { handle, domain: { name: domain } },
-    })
+    const user = await getUser(handle, domain)
+    if (!user) {
+      throw new Error("User not found")
+    }
 
     const profile = await agent.getProfile({
       actor: user.did,
@@ -48,7 +52,7 @@ export default async function HandlePage({ params }: Props) {
       </div>
     )
   } catch (e) {
-    console.error('Error in HandlePage:', e)  // Make the log more specific
+    console.error(e)
     return (
       <div className="grid flex-1 place-items-center">
         <p className="text-center">Profile not found</p>
