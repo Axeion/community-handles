@@ -1,16 +1,29 @@
 export async function GET() {
-    const robotsTxt = `# Fediverse/ActivityPub Crawlers
-  User-agent: Lemmy
-  Disallow: /*/inbox
-  Disallow: /*/outbox
+    const blockedBots = [
+      'Lemmy',
+      'Mastodon',
+      'Pleroma',
+      'Misskey',
+      'GotSocial',
+      'peertube',
+      'pixelfed',
+      'writefreely',
+      'bookwyrm',
+      'funkwhale'
+    ]
   
-  User-agent: Mastodon
+    // Generate rules for each bot
+    const federationRules = blockedBots
+      .map(bot => `
+  User-agent: ${bot}
   Disallow: /*/inbox
   Disallow: /*/outbox
+  Disallow: /*/.well-known/*
+  `)
+      .join('\n')
   
-  User-agent: Pleroma
-  Disallow: /*/inbox
-  Disallow: /*/outbox
+    const robotsTxt = `# Federation/ActivityPub Bots
+  ${federationRules}
   
   # Social Media Crawlers
   User-agent: Twitterbot
@@ -40,7 +53,8 @@ export async function GET() {
   User-agent: *
   Allow: /
   Disallow: /*/inbox
-  Disallow: /*/outbox`
+  Disallow: /*/outbox
+  Disallow: /*/.well-known/*`
   
     return new Response(robotsTxt, {
       headers: {
