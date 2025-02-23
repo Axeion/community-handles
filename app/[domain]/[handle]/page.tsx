@@ -48,7 +48,7 @@ export default async function HandlePage({ params }: Props) {
       </div>
     )
   } catch (e) {
-    console.error(e)
+    console.error('Error in HandlePage:', e)  // Make the log more specific
     return (
       <div className="grid flex-1 place-items-center">
         <p className="text-center">Profile not found</p>
