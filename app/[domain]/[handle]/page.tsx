@@ -9,14 +9,18 @@ interface Props {
 }
 
 async function getUser(handle: string, domain: string) {
-  return await prisma.user.findFirst({
+  console.log('Attempting to find user with:', { handle, domain })
+  const user = await prisma.user.findFirst({
     where: { handle, domain: { name: domain } },
   })
+  console.log('Query result:', user)
+  return user
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const user = await getUser(params.handle, params.domain)
   if (!user) {
+    console.log('No user found in generateMetadata')
     return {
       title: "Profile not found",
       description: ":(",
@@ -36,8 +40,10 @@ export default async function HandlePage({ params }: Props) {
   const { domain, handle } = params
 
   try {
+    console.log('HandlePage params:', { domain, handle })
     const user = await getUser(handle, domain)
     if (!user) {
+      console.log('No user found in HandlePage')
       throw new Error("User not found")
     }
 
@@ -52,7 +58,7 @@ export default async function HandlePage({ params }: Props) {
       </div>
     )
   } catch (e) {
-    console.error(e)
+    console.error('HandlePage error:', e)
     return (
       <div className="grid flex-1 place-items-center">
         <p className="text-center">Profile not found</p>
