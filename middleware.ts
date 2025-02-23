@@ -1,10 +1,38 @@
 import { NextResponse, type NextRequest } from "next/server"
-
 import { getDomain } from "./lib/utils"
+
+// List of bot patterns to block
+const blockedBots = [
+  'lemmy',
+  'mastodon', 
+  'pleroma',
+  'misskey',
+  'gotsocial',
+  'peertube',
+  'pixelfed',
+  'writefreely',
+  'bookwyrm',
+  'funkwhale',
+  'aoderelay',  
+  'ap-relay'    
+].map(bot => bot.toLowerCase())
 
 export function middleware(request: NextRequest) {
   const url = new URL(request.url)
 
+  // First check if it's a bot we want to block
+  const userAgent = request.headers.get('user-agent')?.toLowerCase() || ''
+  const isBlockedBot = blockedBots.some(bot => userAgent.includes(bot))
+
+  if (isBlockedBot) {
+    console.log('Blocked bot request:', { 
+      userAgent, 
+      path: url.pathname 
+    })
+    return new NextResponse(null, { status: 404 })
+  }
+
+  // If not a bot, proceed with domain handling
   const { domain, subdomain } = getDomain(url.hostname)
 
   if (domain) {
@@ -18,6 +46,8 @@ export function middleware(request: NextRequest) {
       )
     }
   }
+
+  return NextResponse.next()
 }
 
 export const config = {
