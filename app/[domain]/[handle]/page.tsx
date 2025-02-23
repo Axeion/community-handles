@@ -65,7 +65,9 @@ export default async function HandlePage({ params }: Props) {
     'pixelfed',
     'writefreely',
     'bookwyrm',
-    'funkwhale'
+    'funkwhale',
+    'aoderelay',
+    'ap-relay'
   ]
 
   // Check if userAgent matches any blocked bot patterns
